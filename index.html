@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Torneo Americano – Quimey Pádel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050608;
+      --card-bg: #11141a;
+      --accent: #00c853;
+      --accent-soft: rgba(0,200,83,0.12);
+      --accent-strong: #00e676;
+      --text-main: #f5f5f5;
+      --text-muted: #9ea7bb;
+      --border: #252a35;
+      --danger: #ff5252;
+      --group-a: #42a5f5;
+      --group-b: #ab47bc;
+      --group-c: #ff7043;
+      --radius-lg: 16px;
+      --shadow-soft: 0 22px 45px rgba(0,0,0,0.55);
+      --shadow-inset: inset 0 0 0 1px rgba(255,255,255,0.04);
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                   "Roboto", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top, #151b26 0, #050608 55%, #020308 100%);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 18px 46px;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 8px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+    }
+
+    p {
+      margin: 4px 0 10px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0,200,83,0.18), rgba(0,200,83,0.02));
+      border: 1px solid rgba(0,200,83,0.4);
+      color: var(--accent-strong);
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      font-size: 0.76rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(0,200,83,0.12), transparent 55%),
+                  var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow-soft), var(--shadow-inset);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      margin-top: 18px;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.06), transparent 60%);
+      opacity: 0.4;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header small {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1.05fr;
+      gap: 22px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 980px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .groups-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 900px) {
+      .groups-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .group-card {
+      border-radius: 13px;
+      padding: 10px 11px 9px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(0,0,0,0.4));
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .group-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .group-label.a { color: var(--group-a); }
+    .group-label.b { color: var(--group-b); }
+    .group-label.c { color: var(--group-c); }
+
+    .group-cancha {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    ul.team-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      font-size: 0.9rem;
+    }
+
+    ul.team-list li {
+      padding: 3px 0;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid rgba(255,255,255,0.09);
+      color: var(--text-muted);
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      margin: 16px 0 6px;
+    }
+
+    .section-title span {
+      color: var(--accent-strong);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    thead {
+      background: rgba(255,255,255,0.03);
+    }
+
+    th, td {
+      padding: 4px 6px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+    }
+
+    td.label {
+      text-align: left;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    input.score-input {
+      width: 40px;
+      padding: 3px 3px;
+      font-size: 0.78rem;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(1,3,8,0.85);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    input.score-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0,200,83,0.6);
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .standings-grid {
+      display: grid;
+      grid-template-columns: 1fr; /* SIEMPRE UNA COLUMNA PARA QUE NO SE PISEN */
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .standings-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .standings-title span {
+      font-weight: 600;
+    }
+
+    .highlight {
+      color: var(--accent-strong);
+    }
+
+    .bracket-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .bracket-block {
+      border-radius: 13px;
+      padding: 9px 11px 9px;
+      background: linear-gradient(140deg, rgba(255,255,255,0.04), rgba(0,0,0,0.5));
+      border: 1px solid rgba(255,255,255,0.09);
+      font-size: 0.82rem;
+    }
+
+    .bracket-block h3 {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .match-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+      padding: 5px 7px;
+      border-radius: 9px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .match-teams {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .team-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+      font-size: 0.8rem;
+    }
+
+    .team-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .scores-inline {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 70px;
+    }
+
+    .scores-inline input {
+      width: 100%;
+    }
+
+    .label-small {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .champion-box {
+      margin-top: 8px;
+      padding: 9px 10px;
+      border-radius: 11px;
+      background: radial-gradient(circle at top, rgba(0,200,83,0.28), transparent 62%);
+      border: 1px solid rgba(0,200,83,0.8);
+      font-size: 0.86rem;
+    }
+
+    .champion-name {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--accent-strong);
+    }
+
+    .timers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .timers-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .timer-card {
+      border-radius: 13px;
+      padding: 10px 11px 9px;
+      background: linear-gradient(150deg, rgba(255,255,255,0.03), rgba(0,0,0,0.55));
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+
+    .timer-title {
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .timer-display {
+      font-size: 1.8rem;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 6px;
+    }
+
+    .timer-display.running {
+      color: var(--accent-strong);
+    }
+
+    .timer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.75);
+      color: var(--text-main);
+      font-size: 0.76rem;
+      padding: 4px 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    button.primary {
+      border-color: rgba(0,200,83,0.85);
+      background: radial-gradient(circle at top, rgba(0,200,83,0.45), rgba(0,0,0,0.9));
+      color: #eafff3;
+    }
+
+    button.danger {
+      border-color: rgba(255,82,82,0.85);
+      color: #ffecec;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="badge">
+      🎾 Torneo Americano · Quimey Pádel Low Cost
+    </div>
+    <h1>Panel Técnico del Torneo</h1>
+    <p>
+      1) Fase de grupos · 2) Clasificación (1° y 2° de cada grupo) · 3) Cuadro final (cuartos, semis y final) · 4) Temporizadores por cancha.
+    </p>
+
+    <!-- 1. GRUPOS -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2>1 · Grupos &amp; Parejas</h2>
+          <small>9 parejas · 3 grupos · 3 canchas (cada pareja juega 2 partidos de grupo)</small>
+        </div>
+        <div class="pill">Categoría 5ª &amp; 5ª Alta</div>
+      </div>
+
+      <div class="groups-grid">
+        <div class="group-card">
+          <div class="group-header">
+            <span class="group-label a">Grupo A</span>
+            <span class="group-cancha">Cancha A</span>
+          </div>
+          <ul class="team-list">
+            <li><span>Juan Carlos – Alex</span><span class="tag">A1</span></li>
+            <li><span>Leonardo – Gustavo</span><span class="tag">A2</span></li>
+            <li><span>José Luis – Maty</span><span class="tag">A3</span></li>
+          </ul>
+        </div>
+
+        <div class="group-card">
+          <div class="group-header">
+            <span class="group-label b">Grupo B</span>
+            <span class="group-cancha">Cancha B</span>
+          </div>
+          <ul class="team-list">
+            <li><span>Manuel – Juan</span><span class="tag">B1</span></li>
+            <li><span>Micha – Partner</span><span class="tag">B2</span></li>
+            <li><span>Mati – Partner</span><span class="tag">B3</span></li>
+          </ul>
+        </div>
+
+        <div class="group-card">
+          <div class="group-header">
+            <span class="group-label c">Grupo C</span>
+            <span class="group-cancha">Cancha C</span>
+          </div>
+          <ul class="team-list">
+            <li><span>Jano – Grogg</span><span class="tag">C1</span></li>
+            <li><span>Ricardo – Abraham</span><span class="tag">C2</span></li>
+            <li><span>Gonza – Dani</span><span class="tag">C3</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. FASE DE GRUPOS + 3. CLASIFICACIÓN + CUADRO FINAL -->
+    <div class="layout-grid">
+      <!-- FASE DE GRUPOS -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>2 · Partidos – Fase de Grupos</h2>
+            <small>Ingresa los juegos ganados por cada pareja (sin empates)</small>
+          </div>
+          <div class="pill">Sólo define 1° y 2° de cada grupo</div>
+        </div>
+
+        <div class="section-title"><span>Grupo A</span> · Cancha A</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th class="label">Partido</th>
+                <th>Pareja 1</th>
+                <th>G1</th>
+                <th>G2</th>
+                <th>Pareja 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-match-id="GM_A1">
+                <td class="label">Ronda 1</td>
+                <td class="label">Juan Carlos – Alex</td>
+                <td><input class="score-input" type="number" min="0" data-team="A1" data-match="GM_A1"></td>
+                <td><input class="score-input" type="number" min="0" data-team="A2" data-match="GM_A1"></td>
+                <td class="label">Leonardo – Gustavo</td>
+              </tr>
+              <tr data-match-id="GM_A2">
+                <td class="label">Ronda 2</td>
+                <td class="label">Juan Carlos – Alex</td>
+                <td><input class="score-input" type="number" min="0" data-team="A1" data-match="GM_A2"></td>
+                <td><input class="score-input" type="number" min="0" data-team="A3" data-match="GM_A2"></td>
+                <td class="label">José Luis – Maty</td>
+              </tr>
+              <tr data-match-id="GM_A3">
+                <td class="label">Ronda 3</td>
+                <td class="label">Leonardo – Gustavo</td>
+                <td><input class="score-input" type="number" min="0" data-team="A2" data-match="GM_A3"></td>
+                <td><input class="score-input" type="number" min="0" data-team="A3" data-match="GM_A3"></td>
+                <td class="label">José Luis – Maty</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-title"><span>Grupo B</span> · Cancha B</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th class="label">Partido</th>
+                <th>Pareja 1</th>
+                <th>G1</th>
+                <th>G2</th>
+                <th>Pareja 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-match-id="GM_B1">
+                <td class="label">Ronda 1</td>
+                <td class="label">Manuel – Juan</td>
+                <td><input class="score-input" type="number" min="0" data-team="B1" data-match="GM_B1"></td>
+                <td><input class="score-input" type="number" min="0" data-team="B2" data-match="GM_B1"></td>
+                <td class="label">Micha – Partner</td>
+              </tr>
+              <tr data-match-id="GM_B2">
+                <td class="label">Ronda 2</td>
+                <td class="label">Manuel – Juan</td>
+                <td><input class="score-input" type="number" min="0" data-team="B1" data-match="GM_B2"></td>
+                <td><input class="score-input" type="number" min="0" data-team="B3" data-match="GM_B2"></td>
+                <td class="label">Mati – Partner</td>
+              </tr>
+              <tr data-match-id="GM_B3">
+                <td class="label">Ronda 3</td>
+                <td class="label">Micha – Partner</td>
+                <td><input class="score-input" type="number" min="0" data-team="B2" data-match="GM_B3"></td>
+                <td><input class="score-input" type="number" min="0" data-team="B3" data-match="GM_B3"></td>
+                <td class="label">Mati – Partner</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-title"><span>Grupo C</span> · Cancha C</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th class="label">Partido</th>
+                <th>Pareja 1</th>
+                <th>G1</th>
+                <th>G2</th>
+                <th>Pareja 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-match-id="GM_C1">
+                <td class="label">Ronda 1</td>
+                <td class="label">Jano – Grogg</td>
+                <td><input class="score-input" type="number" min="0" data-team="C1" data-match="GM_C1"></td>
+                <td><input class="score-input" type="number" min="0" data-team="C2" data-match="GM_C1"></td>
+                <td class="label">Ricardo – Abraham</td>
+              </tr>
+              <tr data-match-id="GM_C2">
+                <td class="label">Ronda 2</td>
+                <td class="label">Jano – Grogg</td>
+                <td><input class="score-input" type="number" min="0" data-team="C1" data-match="GM_C2"></td>
+                <td><input class="score-input" type="number" min="0" data-team="C3" data-match="GM_C2"></td>
+                <td class="label">Gonza – Dani</td>
+              </tr>
+              <tr data-match-id="GM_C3">
+                <td class="label">Ronda 3</td>
+                <td class="label">Ricardo – Abraham</td>
+                <td><input class="score-input" type="number" min="0" data-team="C2" data-match="GM_C3"></td>
+                <td><input class="score-input" type="number" min="0" data-team="C3" data-match="GM_C3"></td>
+                <td class="label">Gonza – Dani</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="muted">* El grupo sólo sirve para ordenar 1° y 2° de cada grupo. El campeón se define en cuartos, semis y final.</p>
+      </div>
+
+      <!-- CLASIFICACIÓN + CUADRO FINAL -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>3 · Clasificación &amp; Cuadro Final</h2>
+            <small>Se actualiza automáticamente al ingresar los resultados de grupos.</small>
+          </div>
+          <button class="primary" id="recalcBtn">Recalcular todo</button>
+        </div>
+
+        <div class="standings-grid">
+          <div>
+            <div class="standings-title"><span class="group-label a">Grupo A</span> · Tabla</div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th><th class="label">Pareja</th><th>PJ</th><th>PG</th><th>PP</th><th>GF</th><th>GC</th><th>Dif</th>
+                  </tr>
+                </thead>
+                <tbody id="standings-A"></tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div class="standings-title"><span class="group-label b">Grupo B</span> · Tabla</div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th><th class="label">Pareja</th><th>PJ</th><th>PG</th><th>PP</th><th>GF</th><th>GC</th><th>Dif</th>
+                  </tr>
+                </thead>
+                <tbody id="standings-B"></tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div class="standings-title"><span class="group-label c">Grupo C</span> · Tabla</div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th><th class="label">Pareja</th><th>PJ</th><th>PG</th><th>PP</th><th>GF</th><th>GC</th><th>Dif</th>
+                  </tr>
+                </thead>
+                <tbody id="standings-C"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="bracket-grid">
+          <!-- CUARTOS -->
+          <div class="bracket-block">
+            <h3>Cuartos de final (clasificados)</h3>
+            <p class="muted">
+              Clasifican automáticamente <span class="highlight">1° y 2° de cada grupo</span> (6 parejas).<br>
+              Emparejamientos cruzados:
+            </p>
+
+            <div class="match-row" data-qf="QF1">
+              <div class="match-teams">
+                <div class="team-line">
+                  <span class="team-name" id="qf1-team1">1° Grupo A</span>
+                </div>
+                <div class="team-line">
+                  <span class="team-name" id="qf1-team2">2° Grupo C</span>
+                </div>
+              </div>
+              <div class="scores-inline">
+                <span class="label-small">Juegos</span>
+                <input class="score-input" type="number" min="0" data-qf="QF1" data-role="t1">
+                <input class="score-input" type="number" min="0" data-qf="QF1" data-role="t2">
+              </div>
+            </div>
+
+            <div class="match-row" data-qf="QF2">
+              <div class="match-teams">
+                <div class="team-line">
+                  <span class="team-name" id="qf2-team1">1° Grupo B</span>
+                </div>
+                <div class="team-line">
+                  <span class="team-name" id="qf2-team2">2° Grupo A</span>
+                </div>
+              </div>
+              <div class="scores-inline">
+                <span class="label-small">Juegos</span>
+                <input class="score-input" type="number" min="0" data-qf="QF2" data-role="t1">
+                <input class="score-input" type="number" min="0" data-qf="QF2" data-role="t2">
+              </div>
+            </div>
+
+            <div class="match-row" data-qf="QF3">
+              <div class="match-teams">
+                <div class="team-line">
+                  <span class="team-name" id="qf3-team1">1° Grupo C</span>
+                </div>
+                <div class="team-line">
+                  <span class="team-name" id="qf3-team2">2° Grupo B</span>
+                </div>
+              </div>
+              <div class="scores-inline">
+                <span class="label-small">Juegos</span>
+                <input class="score-input" type="number" min="0" data-qf="QF3" data-role="t1">
+                <input class="score-input" type="number" min="0" data-qf="QF3" data-role="t2">
+              </div>
+            </div>
+
+            <p class="muted">
+              A semifinales avanzan los 3 ganadores + el <span class="highlight">mejor perdedor</span> (por juegos ganados y diferencia).
+            </p>
+          </div>
+
+          <!-- SEMIS + FINAL -->
+          <div class="bracket-block">
+            <h3>Semifinales &amp; Final</h3>
+            <p class="muted">Se completa sólo con los resultados, sin editar nombres a mano.</p>
+
+            <div class="section-title" style="margin-top:4px;">Semifinales</div>
+
+            <div class="match-row" data-sf="SF1">
+              <div class="match-teams">
+                <div class="team-line">
+                  <span class="team-name" id="sf1-team1">Ganador Cuartos 1</span>
+                </div>
+                <div class="team-line">
+                  <span class="team-name" id="sf1-team2">Ganador Cuartos 2</span>
+                </div>
+              </div>
+              <div class="scores-inline">
+                <span class="label-small">Juegos</span>
+                <input class="score-input" type="number" min="0" data-sf="SF1" data-role="t1">
+                <input class="score-input" type="number" min="0" data-sf="SF1" data-role="t2">
+              </div>
+            </div>
+
+            <div class="match-row" data-sf="SF2">
+              <div class="match-teams">
+                <div class="team-line">
+                  <span class="team-name" id="sf2-team1">Ganador Cuartos 3</span>
+                </div>
+                <div class="team-line">
+                  <span class="team-name" id="sf2-team2">Mejor perdedor</span>
+                </div>
+              </div>
+              <div class="scores-inline">
+                <span class="label-small">Juegos</span>
+                <input class="score-input" type="number" min="0" data-sf="SF2" data-role="t1">
+                <input class="score-input" type="number" min="0" data-sf="SF2" data-role="t2">
+              </div>
+            </div>
+
+            <div class="section-title" style="margin-top:6px;">Final</div>
+
+            <div class="match-row" data-final="F1">
+              <div class="match-teams">
+                <div class="team-line">
+                  <span class="team-name" id="f-team1">Ganador Semi 1</span>
+                </div>
+                <div class="team-line">
+                  <span class="team-name" id="f-team2">Ganador Semi 2</span>
+                </div>
+              </div>
+              <div class="scores-inline">
+                <span class="label-small">Juegos</span>
+                <input class="score-input" type="number" min="0" data-final="F1" data-role="t1">
+                <input class="score-input" type="number" min="0" data-final="F1" data-role="t2">
+              </div>
+            </div>
+
+            <div class="champion-box">
+              🏆 Campeones del torneo:<br>
+              <span class="champion-name" id="champion-name">A la espera de resultados...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. TEMPORIZADORES -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2>4 · Temporizadores por Cancha</h2>
+          <small>Bloques de 25 minutos · Control desde la mesa de organización.</small>
+        </div>
+      </div>
+      <div class="timers-grid">
+        <div class="timer-card">
+          <div class="timer-title">Cancha A</div>
+          <div class="timer-display" id="timerA">25:00</div>
+          <div class="timer-buttons">
+            <button class="primary" data-timer="A" data-action="start">Iniciar</button>
+            <button data-timer="A" data-action="pause">Pausar</button>
+            <button class="danger" data-timer="A" data-action="reset">Reiniciar</button>
+          </div>
+        </div>
+        <div class="timer-card">
+          <div class="timer-title">Cancha B</div>
+          <div class="timer-display" id="timerB">25:00</div>
+          <div class="timer-buttons">
+            <button class="primary" data-timer="B" data-action="start">Iniciar</button>
+            <button data-timer="B" data-action="pause">Pausar</button>
+            <button class="danger" data-timer="B" data-action="reset">Reiniciar</button>
+          </div>
+        </div>
+        <div class="timer-card">
+          <div class="timer-title">Cancha C</div>
+          <div class="timer-display" id="timerC">25:00</div>
+          <div class="timer-buttons">
+            <button class="primary" data-timer="C" data-action="start">Iniciar</button>
+            <button data-timer="C" data-action="pause">Pausar</button>
+            <button class="danger" data-timer="C" data-action="reset">Reiniciar</button>
+          </div>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:8px;">
+        * Los tres temporizadores son independientes. Ideal para ir corriendo por bloques en paralelo.
+      </p>
+    </div>
+
+    <div class="footer-note">
+      Panel técnico generado para Quimey Pádel – adaptable para futuros torneos.
+    </div>
+  </div>
+
+  <script>
+    // ==========================
+    // Datos base de parejas
+    // ==========================
+    const teams = {
+      A1: { id: 'A1', name: 'Juan Carlos – Alex', group: 'A' },
+      A2: { id: 'A2', name: 'Leonardo – Gustavo', group: 'A' },
+      A3: { id: 'A3', name: 'José Luis – Maty', group: 'A' },
+      B1: { id: 'B1', name: 'Manuel – Juan', group: 'B' },
+      B2: { id: 'B2', name: 'Micha – Partner', group: 'B' },
+      B3: { id: 'B3', name: 'Mati – Partner', group: 'B' },
+      C1: { id: 'C1', name: 'Jano – Grogg', group: 'C' },
+      C2: { id: 'C2', name: 'Ricardo – Abraham', group: 'C' },
+      C3: { id: 'C3', name: 'Gonza – Dani', group: 'C' }
+    };
+
+    // Partidos de fase de grupos
+    const groupMatches = [
+      { id: 'GM_A1', group: 'A', t1: 'A1', t2: 'A2' },
+      { id: 'GM_A2', group: 'A', t1: 'A1', t2: 'A3' },
+      { id: 'GM_A3', group: 'A', t1: 'A2', t2: 'A3' },
+      { id: 'GM_B1', group: 'B', t1: 'B1', t2: 'B2' },
+      { id: 'GM_B2', group: 'B', t1: 'B1', t2: 'B3' },
+      { id: 'GM_B3', group: 'B', t1: 'B2', t2: 'B3' },
+      { id: 'GM_C1', group: 'C', t1: 'C1', t2: 'C2' },
+      { id: 'GM_C2', group: 'C', t1: 'C1', t2: 'C3' },
+      { id: 'GM_C3', group: 'C', t1: 'C2', t2: 'C3' }
+    ];
+
+    const qualifiers = {}; // 1A, 2A, 1B, 2B, 1C, 2C
+
+    const bracketTeams = {
+      QF1: { t1: null, t2: null },
+      QF2: { t1: null, t2: null },
+      QF3: { t1: null, t2: null },
+      SF1: { t1: null, t2: null },
+      SF2: { t1: null, t2: null },
+      F1:  { t1: null, t2: null }
+    };
+
+    const bracketResults = {
+      QF1: null,
+      QF2: null,
+      QF3: null,
+      SF1: null,
+      SF2: null,
+      F1:  null
+    };
+
+    function parseScoreInput(input) {
+      const val = input.value.trim();
+      if (val === '') return null;
+      const num = Number(val);
+      return Number.isFinite(num) && num >= 0 ? num : null;
+    }
+
+    // ==========================
+    // Recalcular tabla de grupos
+    // ==========================
+    function recalcStandings() {
+      const stats = {};
+      Object.values(teams).forEach(t => {
+        stats[t.id] = {
+          id: t.id,
+          name: t.name,
+          group: t.group,
+          played: 0,
+          won: 0,
+          lost: 0,
+          gf: 0,
+          ga: 0,
+          diff: 0
+        };
+      });
+
+      groupMatches.forEach(match => {
+        const inputs = document.querySelectorAll(
+          'input.score-input[data-match="' + match.id + '"]'
+        );
+        if (inputs.length !== 2) return;
+
+        const score1 = parseScoreInput(inputs[0]);
+        const score2 = parseScoreInput(inputs[1]);
+
+        if (score1 === null || score2 === null) return;
+
+        const t1 = match.t1;
+        const t2 = match.t2;
+
+        stats[t1].played++;
+        stats[t2].played++;
+        stats[t1].gf += score1;
+        stats[t1].ga += score2;
+        stats[t2].gf += score2;
+        stats[t2].ga += score1;
+
+        if (score1 > score2) {
+          stats[t1].won++;
+          stats[t2].lost++;
+        } else if (score2 > score1) {
+          stats[t2].won++;
+          stats[t1].lost++;
+        } else {
+          // no debería haber empates, pero si pasa, se trata como empate
+        }
+      });
+
+      Object.values(stats).forEach(s => {
+        s.diff = s.gf - s.ga;
+      });
+
+      const groups = { A: [], B: [], C: [] };
+      Object.values(stats).forEach(s => {
+        groups[s.group].push(s);
+      });
+
+      // Orden: más partidos ganados, luego mejor diferencia, luego más juegos a favor
+      ['A','B','C'].forEach(g => {
+        groups[g].sort((a,b) => {
+          if (b.won !== a.won) return b.won - a.won;
+          if (b.diff !== a.diff) return b.diff - a.diff;
+          if (b.gf !== a.gf) return b.gf - a.gf;
+          return a.name.localeCompare(b.name);
+        });
+      });
+
+      const tbodyA = document.getElementById('standings-A');
+      const tbodyB = document.getElementById('standings-B');
+      const tbodyC = document.getElementById('standings-C');
+      tbodyA.innerHTML = '';
+      tbodyB.innerHTML = '';
+      tbodyC.innerHTML = '';
+
+      function renderBody(groupId, tbody) {
+        groups[groupId].forEach((s, idx) => {
+          const tr = document.createElement('tr');
+          // Resaltar 1° y 2° que pasan directo
+          if (idx === 0 || idx === 1) {
+            tr.style.background = 'rgba(0,200,83,' + (idx === 0 ? '0.22' : '0.12') + ')';
+          }
+          tr.innerHTML = `
+            <td>${idx+1}</td>
+            <td class="label">${s.name}</td>
+            <td>${s.played}</td>
+            <td>${s.won}</td>
+            <td>${s.lost}</td>
+            <td>${s.gf}</td>
+            <td>${s.ga}</td>
+            <td>${s.diff}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      renderBody('A', tbodyA);
+      renderBody('B', tbodyB);
+      renderBody('C', tbodyC);
+
+      // Guardar los que pasan: 1° y 2° de cada grupo
+      qualifiers['1A'] = groups['A'][0] ? groups['A'][0].id : null;
+      qualifiers['2A'] = groups['A'][1] ? groups['A'][1].id : null;
+      qualifiers['1B'] = groups['B'][0] ? groups['B'][0].id : null;
+      qualifiers['2B'] = groups['B'][1] ? groups['B'][1].id : null;
+      qualifiers['1C'] = groups['C'][0] ? groups['C'][0].id : null;
+      qualifiers['2C'] = groups['C'][1] ? groups['C'][1].id : null;
+
+      updateQuarterLabels();
+    }
+
+    // ==========================
+    // Pasar clasificados a cuartos
+    // ==========================
+    function updateQuarterLabels() {
+      const mapping = [
+        { qf: 'QF1', t1Slot: '1A', t2Slot: '2C', el1: 'qf1-team1', el2: 'qf1-team2' },
+        { qf: 'QF2', t1Slot: '1B', t2Slot: '2A', el1: 'qf2-team1', el2: 'qf2-team2' },
+        { qf: 'QF3', t1Slot: '1C', t2Slot: '2B', el1: 'qf3-team1', el2: 'qf3-team2' }
+      ];
+
+      mapping.forEach(m => {
+        const t1Id = qualifiers[m.t1Slot];
+        const t2Id = qualifiers[m.t2Slot];
+        const el1 = document.getElementById(m.el1);
+        const el2 = document.getElementById(m.el2);
+
+        if (t1Id && teams[t1Id]) {
+          el1.textContent = teams[t1Id].name;
+        } else {
+          el1.textContent = m.t1Slot;
+        }
+
+        if (t2Id && teams[t2Id]) {
+          el2.textContent = teams[t2Id].name;
+        } else {
+          el2.textContent = m.t2Slot;
+        }
+
+        bracketTeams[m.qf].t1 = t1Id || null;
+        bracketTeams[m.qf].t2 = t2Id || null;
+      });
+
+      recalcBracketFromInputs();
+    }
+
+    // ==========================
+    // Cuartos -> semis
+    // ==========================
+    function recalcBracketFromInputs() {
+      const qfIds = ['QF1','QF2','QF3'];
+      const bestLosers = [];
+
+      qfIds.forEach(qf => {
+        const t1Id = bracketTeams[qf].t1;
+        const t2Id = bracketTeams[qf].t2;
+        const inputs = document.querySelectorAll('input.score-input[data-qf="' + qf + '"]');
+        if (!t1Id || !t2Id || inputs.length !== 2) {
+          bracketResults[qf] = null;
+          return;
+        }
+
+        const s1 = parseScoreInput(inputs[0]);
+        const s2 = parseScoreInput(inputs[1]);
+        if (s1 === null || s2 === null) {
+          bracketResults[qf] = null;
+          return;
+        }
+
+        let winnerId, loserId, winnerScore, loserScore;
+        if (s1 > s2) {
+          winnerId = t1Id;
+          loserId = t2Id;
+          winnerScore = s1;
+          loserScore = s2;
+        } else if (s2 > s1) {
+          winnerId = t2Id;
+          loserId = t1Id;
+          winnerScore = s2;
+          loserScore = s1;
+        } else {
+          // si empatan, se toma t1 como ganador por defecto
+          winnerId = t1Id;
+          loserId = t2Id;
+          winnerScore = s1;
+          loserScore = s2;
+        }
+
+        bracketResults[qf] = {
+          winnerId,
+          loserId,
+          winnerScore,
+          loserScore
+        };
+
+        bestLosers.push({
+          teamId: loserId,
+          scored: loserScore,
+          diff: loserScore - winnerScore
+        });
+      });
+
+      let sf1_t1 = null, sf1_t2 = null, sf2_t1 = null, sf2_t2 = null;
+      if (bracketResults['QF1']) sf1_t1 = bracketResults['QF1'].winnerId;
+      if (bracketResults['QF2']) sf1_t2 = bracketResults['QF2'].winnerId;
+      if (bracketResults['QF3']) sf2_t1 = bracketResults['QF3'].winnerId;
+
+      // Mejor perdedor para completar 4 parejas en semis
+      let bestLoserId = null;
+      if (bestLosers.length > 0) {
+        bestLosers.sort((a,b) => {
+          if (b.scored !== a.scored) return b.scored - a.scored;
+          return b.diff - a.diff;
+        });
+        bestLoserId = bestLosers[0].teamId;
+      }
+      sf2_t2 = bestLoserId;
+
+      bracketTeams.SF1.t1 = sf1_t1;
+      bracketTeams.SF1.t2 = sf1_t2;
+      bracketTeams.SF2.t1 = sf2_t1;
+      bracketTeams.SF2.t2 = sf2_t2;
+
+      const sf1t1El = document.getElementById('sf1-team1');
+      const sf1t2El = document.getElementById('sf1-team2');
+      const sf2t1El = document.getElementById('sf2-team1');
+      const sf2t2El = document.getElementById('sf2-team2');
+
+      sf1t1El.textContent = sf1_t1 && teams[sf1_t1] ? teams[sf1_t1].name : 'Ganador Cuartos 1';
+      sf1t2El.textContent = sf1_t2 && teams[sf1_t2] ? teams[sf1_t2].name : 'Ganador Cuartos 2';
+      sf2t1El.textContent = sf2_t1 && teams[sf2_t1] ? teams[sf2_t1].name : 'Ganador Cuartos 3';
+      sf2t2El.textContent = sf2_t2 && teams[sf2_t2] ? teams[sf2_t2].name : 'Mejor perdedor';
+
+      recalcSemisAndFinal();
+    }
+
+    // ==========================
+    // Semis -> final -> campeón
+    // ==========================
+    function recalcSemisAndFinal() {
+      ['SF1','SF2'].forEach(sf => {
+        bracketResults[sf] = null;
+      });
+      bracketResults['F1'] = null;
+
+      const sfIds = ['SF1','SF2'];
+      sfIds.forEach(sf => {
+        const t1Id = bracketTeams[sf].t1;
+        const t2Id = bracketTeams[sf].t2;
+        const inputs = document.querySelectorAll('input.score-input[data-sf="' + sf + '"]');
+        if (!t1Id || !t2Id || inputs.length !== 2) return;
+
+        const s1 = parseScoreInput(inputs[0]);
+        const s2 = parseScoreInput(inputs[1]);
+        if (s1 === null || s2 === null) return;
+
+        let winnerId, loserId;
+        if (s1 > s2) {
+          winnerId = t1Id;
+          loserId = t2Id;
+        } else if (s2 > s1) {
+          winnerId = t2Id;
+          loserId = t1Id;
+        } else {
+          winnerId = t1Id;
+          loserId = t2Id;
+        }
+
+        bracketResults[sf] = {
+          winnerId,
+          loserId,
+          winnerScore: Math.max(s1, s2),
+          loserScore: Math.min(s1, s2)
+        };
+      });
+
+      let f_t1 = bracketResults['SF1'] ? bracketResults['SF1'].winnerId : null;
+      let f_t2 = bracketResults['SF2'] ? bracketResults['SF2'].winnerId : null;
+      bracketTeams.F1.t1 = f_t1;
+      bracketTeams.F1.t2 = f_t2;
+
+      const f1El = document.getElementById('f-team1');
+      const f2El = document.getElementById('f-team2');
+      f1El.textContent = f_t1 && teams[f_t1] ? teams[f_t1].name : 'Ganador Semi 1';
+      f2El.textContent = f_t2 && teams[f_t2] ? teams[f_t2].name : 'Ganador Semi 2';
+
+      const fInputs = document.querySelectorAll('input.score-input[data-final="F1"]');
+      const champEl = document.getElementById('champion-name');
+      champEl.textContent = 'A la espera de resultados...';
+
+      if (!f_t1 || !f_t2 || fInputs.length !== 2) return;
+      const s1 = parseScoreInput(fInputs[0]);
+      const s2 = parseScoreInput(fInputs[1]);
+      if (s1 === null || s2 === null) return;
+
+      let champId;
+      if (s1 > s2) champId = f_t1;
+      else if (s2 > s1) champId = f_t2;
+      else champId = f_t1;
+
+      if (champId && teams[champId]) {
+        champEl.textContent = teams[champId].name;
+      }
+    }
+
+    // Listeners para inputs
+    document.addEventListener('input', (e) => {
+      if (e.target.classList.contains('score-input') &&
+          e.target.dataset.match) {
+        recalcStandings();
+      }
+
+      if (e.target.classList.contains('score-input') &&
+          e.target.dataset.qf) {
+        recalcBracketFromInputs();
+      }
+
+      if (e.target.classList.contains('score-input') &&
+          e.target.dataset.sf) {
+        recalcSemisAndFinal();
+      }
+
+      if (e.target.classList.contains('score-input') &&
+          e.target.dataset.final) {
+        recalcSemisAndFinal();
+      }
+    });
+
+    document.getElementById('recalcBtn').addEventListener('click', () => {
+      recalcStandings();
+      recalcBracketFromInputs();
+    });
+
+    // Recalcular al cargar
+    recalcStandings();
+
+    // ==========================
+    // Temporizadores por cancha
+    // ==========================
+    function createTimer(displayId) {
+      return {
+        totalSeconds: 25 * 60,
+        remaining: 25 * 60,
+        interval: null,
+        running: false,
+        display: document.getElementById(displayId)
+      };
+    }
+
+    const timers = {
+      A: createTimer('timerA'),
+      B: createTimer('timerB'),
+      C: createTimer('timerC')
+    };
+
+    function updateTimerDisplay(t) {
+      const mins = Math.floor(t.remaining / 60);
+      const secs = t.remaining % 60;
+      t.display.textContent =
+        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+      t.display.classList.toggle('running', t.running);
+      if (t.remaining <= 0) {
+        t.display.style.color = getComputedStyle(document.documentElement)
+          .getPropertyValue('--danger') || '#ff5252';
+      } else {
+        t.display.style.color = '';
+      }
+    }
+
+    function startTimer(key) {
+      const t = timers[key];
+      if (!t || t.running) return;
+      t.running = true;
+      updateTimerDisplay(t);
+      t.interval = setInterval(() => {
+        if (t.remaining > 0) {
+          t.remaining -= 1;
+          updateTimerDisplay(t);
+        } else {
+          clearInterval(t.interval);
+          t.running = false;
+        }
+      }, 1000);
+    }
+
+    function pauseTimer(key) {
+      const t = timers[key];
+      if (!t || !t.running) return;
+      t.running = false;
+      clearInterval(t.interval);
+      updateTimerDisplay(t);
+    }
+
+    function resetTimer(key) {
+      const t = timers[key];
+      if (!t) return;
+      t.running = false;
+      clearInterval(t.interval);
+      t.remaining = 25 * 60;
+      updateTimerDisplay(t);
+    }
+
+    Object.keys(timers).forEach(k => updateTimerDisplay(timers[k]));
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn || !btn.dataset.timer || !btn.dataset.action) return;
+      const key = btn.dataset.timer;
+      const action = btn.dataset.action;
+      if (action === 'start') startTimer(key);
+      if (action === 'pause') pauseTimer(key);
+      if (action === 'reset') resetTimer(key);
+    });
+  </script>
+</body>
+</html>
